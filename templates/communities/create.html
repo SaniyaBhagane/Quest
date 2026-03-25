@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+{% block title %}Create Community | Quest{% endblock %}
+{% block content %}
+
+<style>
+.create-wrapper {
+    max-width: 720px;
+    margin: 60px auto;
+    padding: 32px;
+    background: #020617;
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.55);
+}
+
+.create-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #14b8a6, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.create-header p {
+    color: var(--muted);
+    margin-top: 6px;
+    margin-bottom: 28px;
+}
+
+/* FORM */
+.form-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    font-size: .85rem;
+    margin-bottom: 6px;
+    color: var(--muted);
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #020617;
+    border: 1px solid var(--border);
+    color: var(--text);
+    outline: none;
+    font-size: .95rem;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34,211,238,.25);
+}
+
+/* ACTIONS */
+.form-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 30px;
+}
+
+.btn-primary {
+    flex: 1;
+    padding: 14px;
+    border-radius: 16px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #14b8a6, #22d3ee);
+    color: #020617;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    flex: 1;
+    padding: 14px;
+    border-radius: 16px;
+    font-weight: 600;
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    text-decoration: none;
+    text-align: center;
+}
+</style>
+
+<div class="create-wrapper">
+
+    <div class="create-header">
+        <h1>Create a Community</h1>
+        <p>Build a space where people can connect and share.</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <small style="color:#f87171;">{{ field.errors|striptags }}</small>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                Create Community
+            </button>
+            <a href="{% url 'communities:list' %}" class="btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

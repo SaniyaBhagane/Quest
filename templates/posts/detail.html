@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+{% block title %}{{ post.title|default:"Post" }} · Quest{% endblock %}
+{% block content %}
+
+<style>
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= POST ================= */
+.post-card {
+  margin-bottom: 32px;
+  animation: fadeUp .35s ease;
+}
+
+.post-meta {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+/* ================= COMMENTS ================= */
+.comment {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  margin-bottom: 14px;
+}
+
+.comment-author {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.comment-content {
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.comment-actions {
+  margin-top: 8px;
+}
+
+.reply-btn {
+  font-size: 12px;
+  color: #5eead4;
+  cursor: pointer;
+}
+
+.nested {
+  margin-left: 28px;
+  margin-top: 12px;
+  border-left: 2px solid #1f2937;
+  padding-left: 16px;
+}
+
+/* ================= FORM ================= */
+.comment-form textarea {
+  width: 100%;
+  resize: none;
+  padding: 12px;
+  border-radius: 12px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  color: #020617;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+</style>
+
+<!-- ================= POST ================= -->
+<div class="card post-card">
+  <h2>{{ post.title }}</h2>
+
+  <div class="post-meta">
+    Posted by <strong>{{ post.author.username }}</strong> · {{ post.created_at|date:"M d, Y" }}
+  </div>
+
+  <p>{{ post.content }}</p>
+</div>
+
+<!-- ================= COMMENT FORM ================= -->
+<div class="card">
+  <h3>💬 Discussions</h3>
+
+  {% if user.is_authenticated %}
+    <form method="post" class="comment-form">
+      {% csrf_token %}
+      <textarea name="content" rows="3" placeholder="Write a comment…" required></textarea>
+      <br><br>
+      <button class="btn-primary">Post Comment</button>
+    </form>
+  {% else %}
+    <p class="muted">Login to participate</p>
+  {% endif %}
+
+  <br>
+
+  <!-- ================= NESTED COMMENTS ================= -->
+  {% for comment in comments %}
+    {% if not comment.parent %}
+      {% include "posts/comment.html" with comment=comment %}
+    {% endif %}
+  {% empty %}
+    <p class="muted">No comments yet. Be the first 👀</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

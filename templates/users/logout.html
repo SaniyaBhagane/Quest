@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+{% block title %}Logged Out | Quest{% endblock %}
+
+{% block content %}
+<style>
+.logout-wrapper {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeUp 0.8s ease;
+}
+
+.logout-card {
+    background: linear-gradient(180deg, #111827, #020617);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 50px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+.logout-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.logout-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.logout-card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+.logout-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 12px 26px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    border: 1px solid var(--border);
+    padding: 12px 26px;
+    border-radius: 10px;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+</style>
+
+<div class="logout-wrapper">
+    <div class="logout-card">
+        <div class="logout-icon">👋</div>
+        <h2>You’ve been logged out</h2>
+        <p>
+            Thanks for learning with Quest.<br>
+            Come back anytime to continue growing.
+        </p>
+
+        <div class="logout-actions">
+            <a href="{% url 'login' %}" class="btn-primary">Sign In Again</a>
+            <a href="/" class="btn-outline">Go Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

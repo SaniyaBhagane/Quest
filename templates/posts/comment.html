@@ -1,0 +1,27 @@
+<div class="comment">
+  <div class="comment-author">{{ comment.author.username }}</div>
+  <div class="comment-time">{{ comment.created_at|timesince }} ago</div>
+  <div class="comment-content">{{ comment.content }}</div>
+
+  {% if user.is_authenticated %}
+    <div class="comment-actions">
+      <span class="reply-btn" onclick="document.getElementById('reply-{{ comment.id }}').style.display='block'">
+        Reply
+      </span>
+    </div>
+
+    <form method="post" id="reply-{{ comment.id }}" style="display:none;margin-top:10px;">
+      {% csrf_token %}
+      <input type="hidden" name="parent_id" value="{{ comment.id }}">
+      <textarea name="content" rows="2" placeholder="Write a reply…" required></textarea>
+      <br><br>
+      <button class="btn-primary">Reply</button>
+    </form>
+  {% endif %}
+</div>
+
+{% for reply in comment.replies.all %}
+  <div class="nested">
+    {% include "posts/comment.html" with comment=reply %}
+  </div>
+{% endfor %}

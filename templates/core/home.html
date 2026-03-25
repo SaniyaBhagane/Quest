@@ -1,0 +1,289 @@
+{% extends 'layout.html' %}
+{% block title %}Quest | Learn Together{% endblock %}
+
+{% block content %}
+<style>
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 110px 8% 90px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 720px;
+  height: 720px;
+  background: radial-gradient(circle, rgba(99,102,241,.18), transparent 60%);
+  top: -220px;
+  right: -220px;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(20,184,166,.12), transparent 60%);
+  bottom: -200px;
+  left: -200px;
+}
+
+.hero-inner {
+  max-width: 920px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp .9s ease;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(99,102,241,0.12);
+  color: #c7d2fe;
+  font-size: .85rem;
+  margin-bottom: 30px;
+  border: 1px solid rgba(99,102,241,.25);
+}
+
+.hero h1 {
+  font-size: 3.4rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 26px;
+  letter-spacing: -0.02em;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg,#14b8a6,#22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 720px;
+  margin: 0 auto 44px;
+  line-height: 1.75;
+}
+
+/* ===== ACTIONS ===== */
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 70px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg,#14b8a6,#22d3ee);
+  color: #020617;
+  padding: 14px 32px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 16px 40px rgba(20,184,166,.4);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 55px rgba(20,184,166,.55);
+}
+
+.btn-outline {
+  padding: 14px 32px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition: background .2s ease, border .2s ease;
+}
+
+.btn-outline:hover {
+  background: rgba(255,255,255,.04);
+  border-color: rgba(255,255,255,.18);
+}
+
+/* ===== STATS ===== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 36px;
+}
+
+.stat {
+  padding: 28px;
+  border-radius: 18px;
+  background: linear-gradient(180deg,#020617,#02040f);
+  border: 1px solid var(--border);
+}
+
+.stat h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.stat span {
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: 120px 8%;
+  text-align: center;
+}
+
+.section h2 {
+  font-size: 2.3rem;
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
+
+.section p {
+  color: var(--muted);
+  max-width: 720px;
+  margin: 0 auto 70px;
+  line-height: 1.7;
+}
+
+/* ===== CARDS ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 34px;
+}
+
+.card {
+  background: linear-gradient(180deg,#020617,#02040f);
+  border: 1px solid var(--border);
+  padding: 38px;
+  border-radius: 22px;
+  text-align: left;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.55);
+}
+
+/* ===== CTA ===== */
+.cta {
+  padding: 120px 8%;
+  background:
+    radial-gradient(circle at top, rgba(99,102,241,.18), transparent 45%),
+    linear-gradient(180deg,#020617,#02040f);
+  text-align: center;
+}
+
+.cta h2 {
+  font-size: 2.2rem;
+  margin-bottom: 14px;
+}
+
+.cta p {
+  color: var(--muted);
+  margin-bottom: 36px;
+}
+</style>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="badge">✨ Learn Faster, Without Searching Everywhere</div>
+
+    <h1>
+      Learn Together,<br>
+      <span>Grow With Clarity</span>
+    </h1>
+
+    <p>
+      Quest brings focused learning communities together with a smart homepage
+      assistant — helping you understand concepts, find direction, and learn
+      without endless tab-hopping.
+    </p>
+
+    <div class="hero-actions">
+      <a href="{% url 'communities:list' %}" class="btn-primary">Explore Communities</a>
+      <a href="{% url 'login' %}" class="btn-outline">Sign In</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <h2>50k+</h2>
+        <span>Active Learners</span>
+      </div>
+      <div class="stat">
+        <h2>Instant</h2>
+        <span>AI Help on Homepage</span>
+      </div>
+      <div class="stat">
+        <h2>1.2k+</h2>
+        <span>Daily Discussions</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="section">
+  <h2>Why Quest?</h2>
+  <p>
+    A focused space where human discussion and AI guidance work together —
+    so learning feels intentional, not overwhelming.
+  </p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>💬 Community First</h3>
+      <p>Learn through real discussions, shared struggles, and practical insights.</p>
+    </div>
+
+    <div class="card">
+      <h3>🤖 Smart Assistant</h3>
+      <p>Ask questions, get explanations, and discover what to learn next.</p>
+    </div>
+
+    <div class="card">
+      <h3>🧭 Clear Direction</h3>
+      <p>Stay focused with guidance that blends AI clarity and human experience.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>One Platform. Clear Learning.</h2>
+  <p>Discuss with people. Ask the bot. Learn without friction.</p>
+  <a href="{% url 'register' %}" class="btn-primary">Get Started for Free</a>
+</section>
+
+{% endblock %}

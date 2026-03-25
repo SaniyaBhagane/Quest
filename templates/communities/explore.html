@@ -1,0 +1,247 @@
+{% extends "layout.html" %}
+{% block title %}Explore Communities | Quest{% endblock %}
+{% block content %}
+
+<style>
+.explore-page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 48px 20px;
+}
+
+/* HEADER */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.page-title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    background: linear-gradient(90deg, #14b8a6, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    color: var(--muted);
+    margin-top: 8px;
+    max-width: 520px;
+}
+
+/* CREATE BUTTON */
+.create-btn {
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #14b8a6, #22d3ee);
+    color: #020617;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(34,211,238,.35);
+    transition: transform .15s ease, box-shadow .2s ease;
+}
+
+.create-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 45px rgba(34,211,238,.45);
+}
+
+/* FILTERS */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.filter-pill {
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background .2s ease, color .2s ease;
+}
+
+.filter-pill:hover {
+    background: rgba(255,255,255,0.08);
+    color: #e5e7eb;
+}
+
+.filter-pill.active {
+    background: rgba(34,211,238,.18);
+    color: #67e8f9;
+}
+
+/* DOTS */
+.pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+.pill-dot.tech { background: #38bdf8; }
+.pill-dot.art { background: #f472b6; }
+.pill-dot.edu { background: #a78bfa; }
+.pill-dot.health { background: #34d399; }
+.pill-dot.career { background: #facc15; }
+
+/* GRID */
+.community-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+/* CARD */
+.community-card {
+    background: #020617;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.community-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(0,0,0,.55);
+}
+
+/* TAG */
+.tag {
+    font-size: .7rem;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    display: inline-block;
+    background: rgba(20,184,166,.15);
+    color: #5eead4;
+}
+
+/* TEXT */
+.community-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+}
+
+.community-card h3 a {
+    color: white;
+    text-decoration: none;
+}
+
+.community-card p {
+    color: var(--muted);
+    font-size: .95rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+/* STATS */
+.stats {
+    font-size: .8rem;
+    color: var(--muted);
+}
+
+/* JOIN BUTTON */
+.join-btn {
+    margin-top: 18px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.join-btn.join {
+    background: linear-gradient(90deg, #14b8a6, #22d3ee);
+    color: #020617;
+}
+
+.join-btn.joined {
+    background: rgba(255,255,255,0.04);
+    color: var(--muted);
+    cursor: default;
+}
+</style>
+
+<section class="explore-page">
+
+<div class="header-row">
+    <div>
+        <h1 class="page-title">Explore Communities</h1>
+        <p class="page-subtitle">
+            Discover spaces where people share, learn, and grow together.
+        </p>
+    </div>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'communities:create' %}" class="create-btn">
+            + Create Community
+        </a>
+    {% endif %}
+</div>
+
+<div class="filters">
+    <a href="{% url 'communities:list' %}"
+       class="filter-pill {% if active_category == 'all' %}active{% endif %}">
+        All
+    </a>
+
+    {% for key, label in categories %}
+        <a href="?category={{ key }}"
+           class="filter-pill {% if active_category == key %}active{% endif %}">
+            <span class="pill-dot {{ key }}"></span>
+            {{ label }}
+        </a>
+    {% endfor %}
+</div>
+
+<div class="community-grid">
+{% for community in communities %}
+    <div class="community-card">
+
+        <span class="tag">{{ community.get_category_display }}</span>
+
+        <h3>
+            <a href="{% url 'communities:detail' community.slug %}">
+                {{ community.name }}
+            </a>
+        </h3>
+
+        <p>{{ community.description|truncatechars:90 }}</p>
+
+        <div class="stats">
+            {{ community.members.count }} members
+        </div>
+
+        {% if user.is_authenticated %}
+            {% if community.id in joined_ids %}
+                <button class="join-btn joined" disabled>Joined</button>
+            {% else %}
+                <form method="post" action="{% url 'communities:join' community.slug %}">
+                    {% csrf_token %}
+                    <button class="join-btn join">Join Community</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'login' %}" class="join-btn join"
+               style="text-decoration:none; text-align:center;">
+                Login to Join
+            </a>
+        {% endif %}
+
+    </div>
+{% endfor %}
+</div>
+
+</section>
+{% endblock %}

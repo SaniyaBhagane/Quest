@@ -1,0 +1,135 @@
+{% extends 'layout.html' %}
+
+{% block title %}Login | Quest{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <h2 style="margin-bottom: 8px;">Welcome back</h2>
+    <p style="color: var(--muted); margin-bottom: 24px;">
+        Sign in to continue to Quest
+    </p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="alert {{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="Enter your username"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+            >
+        </div>
+
+        <button class="btn-primary" type="submit">
+            Sign In
+        </button>
+    </form>
+
+    <p class="auth-footer">
+        Don’t have an account?
+        <a href="{% url 'register' %}">Create one</a>
+    </p>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: var(--muted);
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #020617;
+        border: 1px solid var(--border);
+        color: var(--text);
+        outline: none;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
+    }
+
+    .btn-primary {
+        width: 100%;
+        margin-top: 12px;
+        padding: 14px;
+        background: var(--primary);
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+    }
+
+    .auth-footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--muted);
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .alert {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: #fecaca;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+</style>
+
+<script>
+    // prevents form resubmission on refresh
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+</script>
+{% endblock %}

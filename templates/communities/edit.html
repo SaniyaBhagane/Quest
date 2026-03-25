@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+{% block title %}Edit Community · {{ community.name }}{% endblock %}
+{% block content %}
+
+<style>
+.edit-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.edit-header {
+    background: linear-gradient(135deg, #0f172a, #020617);
+    padding: 24px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+}
+
+.edit-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.edit-header p {
+    color: #9ca3af;
+    font-size: 0.95rem;
+}
+
+.edit-card {
+    background: #020617;
+    border: 1px solid #1f2937;
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.edit-card label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.edit-card input,
+.edit-card textarea,
+.edit-card select {
+    width: 100%;
+    background: #020617;
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    padding: 12px;
+    color: #e5e7eb;
+    margin-bottom: 18px;
+}
+
+.edit-card input:focus,
+.edit-card textarea:focus,
+.edit-card select:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-primary {
+    background: #6366f1;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #4f46e5;
+}
+
+.btn-secondary {
+    background: #ef4444;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+}
+</style>
+
+<div class="edit-wrapper">
+
+    <div class="edit-header">
+        <h1>✏ Edit Community</h1>
+        <p>Update your community details</p>
+    </div>
+
+    <div class="edit-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label>Name</label>
+            {{ form.name }}
+
+            <label>Description</label>
+            {{ form.description }}
+
+            <label>Category</label>
+            {{ form.category }}
+
+            <label>Icon</label>
+            {{ form.icon }}
+
+            <label>Avatar</label>
+            {{ form.avatar }}
+
+            <div class="actions">
+                <button type="submit" class="btn-primary">
+                    Save Changes
+                </button>
+
+                <a href="{% url 'communities:detail' community.slug %}" class="btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

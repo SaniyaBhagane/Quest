@@ -1,0 +1,149 @@
+{% extends "layout.html" %}
+{% block title %}Edit Profile · Quest{% endblock %}
+
+{% block content %}
+<div class="edit-profile-card">
+
+  <h2>Edit Profile</h2>
+
+  <!-- Avatar Preview -->
+  <div class="avatar-preview">
+    {% if profile.avatar %}
+      <img src="{{ profile.avatar.url }}">
+    {% else %}
+      <div class="avatar-placeholder">
+        {{ user.username|first|upper }}
+      </div>
+    {% endif %}
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- USER INFO -->
+    <label>Username</label>
+    {{ user_form.username }}
+
+    <label>Email</label>
+    {{ user_form.email }}
+
+    <!-- PROFILE INFO -->
+    <label>Profile Picture</label>
+    {{ profile_form.avatar }}
+
+    <label>Bio</label>
+    {{ profile_form.bio }}
+
+    <div class="actions">
+      <button type="submit" class="save-btn">Save Changes</button>
+      <a href="{% url 'home' %}" class="cancel-btn">Cancel</a>
+    </div>
+  </form>
+
+</div>
+
+<style>
+.edit-profile-card {
+  max-width: 520px;
+  margin: auto;
+  padding: 38px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #0b1220, #020617);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 60px rgba(0,0,0,.7);
+  animation: fadeUp .5s ease;
+}
+
+.edit-profile-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.avatar-preview {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  margin: 0 auto 22px;
+  overflow: hidden;
+  border: 2px solid var(--primary);
+}
+
+.avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 40px;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+}
+
+label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #020617;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 14px;
+}
+
+.save-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+  color: #020617;
+  box-shadow: 0 14px 30px rgba(20,184,166,.45);
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 50px rgba(20,184,166,.65);
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid rgba(239,68,68,.4);
+  color: #fca5a5;
+  transition: background .2s ease, transform .15s ease;
+}
+
+.cancel-btn:hover {
+  background: rgba(239,68,68,.15);
+  transform: translateY(-1px);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}

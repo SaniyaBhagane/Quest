@@ -1,0 +1,12 @@
+{% comment %}
+This file is used ONLY for infinite scroll AJAX responses.
+DO NOT add layout, containers, scripts, or styles here.
+{% endcomment %}
+
+{% for post in posts %}
+    {% include "posts/post_card.html" with post=post %}
+{% empty %}
+    <div class="no-more-posts">
+        No more posts
+    </div>
+{% endfor %}
