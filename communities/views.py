@@ -1,9 +1,13 @@
+import json
+import anthropic
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden, JsonResponse
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 from .models import Community, CommunityMembership, Resource
 from .forms import CommunityForm, ResourceForm
@@ -322,3 +326,72 @@ def community_create(request):
     return render(request, "communities/create.html", {
         "form": form
     })
+
+
+# =========================
+# AI CHATBOT API
+# =========================
+SYSTEM_PROMPT = """You are Quest Assistant, a friendly and knowledgeable AI helper built into the Quest platform — a community-based platform where users can discover, join, and engage with communities around shared interests.
+
+You help users with:
+- Finding and joining communities that match their interests
+- Understanding how the Quest platform works (posting, profiles, community rules, etc.)
+- General knowledge questions on any topic — you are a capable general-purpose assistant
+- Community-specific support and guidance
+- Navigating features like posts, media, templates, and user settings
+
+Platform overview:
+- Quest has Communities where users group around topics
+- Users can create Posts and share Media
+- There are Templates to help structure content
+- Each user has a Profile they can customize
+
+Personality:
+- Warm, concise, and genuinely helpful
+- Never tell users to visit another website or google it — answer directly
+- If you don't know a specific Quest platform detail, give your best general answer
+- Keep responses focused and readable — use bullet points when listing multiple things
+- You're allowed to answer general knowledge questions too (science, tech, history, etc.)
+
+Always aim to fully resolve the user's question in one response so they never need to go elsewhere."""
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def chatbot_api(request):
+    try:
+        data = json.loads(request.body)
+        messages = data.get("messages", [])
+
+        if not messages:
+            return JsonResponse({"error": "No messages provided"}, status=400)
+
+        formatted_messages = []
+        for msg in messages:
+            if msg.get("role") in ("user", "assistant") and msg.get("content"):
+                formatted_messages.append({
+                    "role": msg["role"],
+                    "content": str(msg["content"])
+                })
+
+        if not formatted_messages:
+            return JsonResponse({"error": "Invalid message format"}, status=400)
+
+        client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env
+
+        response = client.messages.create(
+            model="claude-opus-4-5",
+            max_tokens=1024,
+            system=SYSTEM_PROMPT,
+            messages=formatted_messages,
+        )
+
+        reply = response.content[0].text
+        return JsonResponse({"reply": reply})
+
+    except anthropic.APIError as e:
+        return JsonResponse({"error": f"AI service error: {str(e)}"}, status=502)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

@@ -6,7 +6,9 @@ app_name = "communities"
 urlpatterns = [
     path("", views.community_list, name="list"),
 
-    path("create/", views.community_create, name="create"),  # ✅ ADD THIS
+    path("create/", views.community_create, name="create"),
+
+    path("chatbot/", views.chatbot_api, name="chatbot_api"),  # ✅ AI Chatbot
 
     path("<slug:slug>/", views.community_detail, name="detail"),
     path("<slug:slug>/join/", views.join_community, name="join"),
