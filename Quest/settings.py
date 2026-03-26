@@ -16,14 +16,19 @@ load_dotenv(BASE_DIR / ".env")
 # SECURITY
 # ======================================================
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = True
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv("DEBUG", "True") == "True"
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 # ======================================================
 # OPENAI
 # ======================================================
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Optional: safety check
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY is not set in .env file")
 
 # ======================================================
 # APPLICATIONS
@@ -80,6 +85,9 @@ TEMPLATES = [
     },
 ]
 
+# ======================================================
+# WSGI
+# ======================================================
 WSGI_APPLICATION = 'Quest.wsgi.application'
 
 # ======================================================
@@ -107,15 +115,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # ======================================================
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
 USE_TZ = True
 
 # ======================================================
-# STATIC & MEDIA
+# STATIC FILES
 # ======================================================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+# ======================================================
+# MEDIA FILES
+# ======================================================
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

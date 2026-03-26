@@ -5,275 +5,343 @@
 {% block content %}
 
 <style>
-/* ===== LAYOUT ===== */
+
+/* ================= PAGE ================= */
 .page-container {
   max-width: 920px;
   margin: auto;
   padding: 28px 20px;
 }
 
-/* ===== CARD ===== */
+/* ================= CARD ================= */
 .card {
   background: linear-gradient(145deg, #0b1220, #050a15);
-  border-radius: 20px;
-  padding: 26px;
-  margin-bottom: 26px;
-  border: 1px solid #1f2937;
-  box-shadow: 0 16px 40px rgba(0,0,0,.5);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 10px 40px rgba(0,0,0,.6);
   color: white;
 }
 
-/* ===== HEADER ===== */
-.community-header h1 {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.community-header p {
-  color: #9ca3af;
-  margin-bottom: 18px;
-}
-
-/* ===== BUTTONS ===== */
+/* ================= BUTTON ================= */
 .btn {
-  padding: 10px 18px;
-  border-radius: 14px;
+  padding: 10px 16px;
+  border-radius: 12px;
   font-size: 14px;
-  font-weight: 600;
-  border: none;
   cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
 }
-
-/* PRIMARY ACTION */
 .btn.primary {
-  background: linear-gradient(90deg, #6366f1, #22d3ee);
+  background: linear-gradient(135deg,#6366f1,#22d3ee);
   color: #020617;
-  box-shadow: 0 12px 30px rgba(99,102,241,.4);
 }
-
-.btn.primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 36px rgba(34,211,238,.5);
-}
-
-/* SECONDARY */
 .btn.secondary {
   background: #020617;
   border: 1px solid #1f2937;
-  color: #9ca3af;
+  color: #aaa;
+}
+.btn.danger {
+  border: 1px solid #dc2626;
+  color: #f87171;
 }
 
-.btn.secondary:hover {
-  background: #020617;
+/* ================= CHAT BUTTON ================= */
+#chat-bubble {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#6366f1,#22d3ee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 10px 40px rgba(99,102,241,.5);
+  z-index: 9999;
+  transition: 0.25s;
+}
+#chat-bubble:hover {
+  transform: scale(1.1);
+}
+
+/* ================= CHAT WINDOW ================= */
+#chat-window {
+  position: fixed;
+  bottom: 100px;
+  right: 25px;
+  width: 380px;
+  height: 520px;
+  background: rgba(15,23,42,0.95);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9998;
+
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  pointer-events: none;
+  transition: 0.3s ease;
+}
+#chat-window.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+/* ================= HEADER ================= */
+.chat-header {
+  padding: 14px;
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+/* ================= MESSAGES ================= */
+.chat-body {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* MESSAGE */
+.msg {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  animation: fade 0.2s ease;
+}
+@keyframes fade {
+  from {opacity:0; transform: translateY(5px);}
+  to {opacity:1;}
+}
+
+.msg.user {
+  background: #6366f1;
+  color: white;
+  align-self: flex-end;
+}
+
+.msg.bot {
+  background: #111827;
   color: #e5e7eb;
 }
 
-/* DANGER */
-.btn.danger {
-  background: #020617;
-  border: 1px solid #dc2626;
-  color: #fca5a5;
-}
-
-.btn.danger:hover {
-  background: rgba(220,38,38,.15);
-}
-
-/* HEADER ACTIONS */
-.header-actions {
+/* ================= TYPING ================= */
+.typing {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 4px;
+}
+.typing span {
+  width: 6px;
+  height: 6px;
+  background: #aaa;
+  border-radius: 50%;
+  animation: bounce 1.2s infinite;
+}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bounce {
+  0%,80%,100%{transform:scale(.6)}
+  40%{transform:scale(1)}
 }
 
-/* ===== PINNED ===== */
-.pinned {
-  border-left: 4px solid #facc15;
-  padding-left: 16px;
-  background: rgba(250,204,21,.06);
-}
-
-/* ===== EMPTY ===== */
-.empty {
-  color: #9ca3af;
-  text-align: center;
-  padding: 40px 0;
-}
-
-/* ===== MODAL ===== */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(2,6,23,.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal {
-  background: linear-gradient(145deg, #0b1220, #050a15);
-  border-radius: 20px;
-  padding: 28px;
-  width: 90%;
-  max-width: 420px;
-  border: 1px solid #1f2937;
-}
-
-.modal h2 {
-  color: #f87171;
-  margin-bottom: 10px;
-}
-
-.modal p {
-  color: #9ca3af;
-  font-size: 14px;
-}
-
-.modal-actions {
+/* ================= INPUT ================= */
+.chat-input {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
 }
+.chat-input textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 10px;
+  outline: none;
+  resize: none;
+}
+.chat-input button {
+  background: linear-gradient(135deg,#6366f1,#22d3ee);
+  border: none;
+  padding: 10px 14px;
+  color: white;
+  cursor: pointer;
+}
+
+/* ================= SCROLLBAR ================= */
+.chat-body::-webkit-scrollbar {
+  width: 5px;
+}
+.chat-body::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+}
+
 </style>
 
 <section class="page-container">
 
-<!-- COMMUNITY HEADER -->
-<div class="card community-header">
-  <h1>{{ community.icon }} {{ community.name }}</h1>
+<div class="card">
+  <h2>{{ community.icon }} {{ community.name }}</h2>
   <p>{{ community.description }}</p>
-
-  <div class="header-actions">
-
-    {% if user.is_authenticated %}
-        {% if is_member %}
-            <a href="{% url 'posts:create' community.id %}" class="btn primary">
-              ✍️ Create Post
-            </a>
-        {% else %}
-            <form method="post" action="{% url 'communities:join' community.slug %}">
-              {% csrf_token %}
-              <button class="btn primary">Join to Post</button>
-            </form>
-        {% endif %}
-    {% else %}
-        <a href="{% url 'login' %}" class="btn primary">
-          Login to Create Post
-        </a>
-    {% endif %}
-
-    {% if is_member and not is_owner %}
-        <form method="post" action="{% url 'communities:leave' community.slug %}">
-          {% csrf_token %}
-          <button class="btn secondary">Leave</button>
-        </form>
-    {% endif %}
-
-    {% if is_owner %}
-        <a href="{% url 'communities:edit' community.slug %}" class="btn secondary">
-          ✏ Edit
-        </a>
-        <button class="btn danger" onclick="openDeleteModal()">🗑 Delete</button>
-    {% endif %}
-
-  </div>
 </div>
 
-<!-- PINNED POSTS -->
-{% for post in posts %}
-  {% if post.is_pinned %}
-    <div class="card pinned">
-      <strong>📌 Pinned</strong>
-      {% include "posts/post_card.html" with post=post %}
-    </div>
-  {% endif %}
-{% endfor %}
-
-<!-- POSTS FEED -->
 <div id="feed">
   {% for post in posts %}
-    {% if not post.is_pinned %}
-      {% include "posts/post_card.html" with post=post %}
-    {% endif %}
-  {% empty %}
-    <div class="empty">
-      No posts yet. Be the first to start the conversation 🚀
-    </div>
+    {% include "posts/post_card.html" with post=post %}
   {% endfor %}
 </div>
 
-<div id="loading" class="empty" style="display:none">
-  Loading more posts...
+<div id="loading" style="display:none;text-align:center;color:#aaa;">
+  Loading...
 </div>
 
 </section>
 
-{% if is_owner %}
-<!-- DELETE MODAL -->
-<div id="deleteModal" class="modal-overlay" onclick="closeDeleteModal(event)">
-  <div class="modal" onclick="event.stopPropagation()">
-    <h2>Delete community?</h2>
-    <p>This action cannot be undone.</p>
+<!-- CHAT -->
+<div id="chat-bubble">💬</div>
 
-    <div class="modal-actions">
-      <button class="btn secondary" onclick="closeDeleteModal()">Cancel</button>
-      <form method="post" action="{% url 'communities:delete' community.slug %}">
-        {% csrf_token %}
-        <button class="btn danger">Yes, delete</button>
-      </form>
-    </div>
+<div id="chat-window">
+  <div class="chat-header">
+    <span>Quest Assistant</span>
+    <button onclick="toggleChat()">✖</button>
+  </div>
+
+  <div id="chat-body" class="chat-body"></div>
+
+  <div class="chat-input">
+    <textarea id="chat-input" placeholder="Ask anything..."></textarea>
+    <button onclick="sendMessage()">➤</button>
   </div>
 </div>
-{% endif %}
 
 <script>
-function openDeleteModal() {
-  document.getElementById("deleteModal").style.display = "flex";
+
+/* CSRF */
+function getCookie(name){
+  let value=null;
+  document.cookie.split(';').forEach(c=>{
+    if(c.trim().startsWith(name+'=')){
+      value=c.split('=')[1];
+    }
+  });
+  return value;
 }
-function closeDeleteModal(e) {
-  if (!e || e.target.id === "deleteModal") {
-    document.getElementById("deleteModal").style.display = "none";
+
+/* TOGGLE */
+const chatWin = document.getElementById("chat-window");
+document.getElementById("chat-bubble").onclick = () => {
+  chatWin.classList.toggle("open");
+};
+function toggleChat(){
+  chatWin.classList.toggle("open");
+}
+
+/* CHAT */
+const chatBody = document.getElementById("chat-body");
+const input = document.getElementById("chat-input");
+let history = [];
+
+function addMsg(role,text){
+  const div=document.createElement("div");
+  div.className="msg "+role;
+  div.innerText=text;
+  chatBody.appendChild(div);
+  chatBody.scrollTop=chatBody.scrollHeight;
+}
+
+function typing(){
+  const div=document.createElement("div");
+  div.className="msg bot";
+  div.id="typing";
+  div.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  chatBody.appendChild(div);
+}
+
+function removeTyping(){
+  const t=document.getElementById("typing");
+  if(t) t.remove();
+}
+
+async function sendMessage(){
+  const text=input.value.trim();
+  if(!text) return;
+
+  addMsg("user",text);
+  history.push({role:"user",content:text});
+  input.value="";
+
+  typing();
+
+  try{
+    const res=await fetch("{% url 'communities:chatbot_api' %}",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "X-CSRFToken":getCookie("csrftoken")
+      },
+      body:JSON.stringify({messages:history})
+    });
+
+    const data=await res.json();
+    removeTyping();
+
+    addMsg("bot",data.reply||"Error");
+    history.push({role:"assistant",content:data.reply});
+
+  }catch{
+    removeTyping();
+    addMsg("bot","Server error");
   }
 }
 
-/* ===== INFINITE SCROLL ===== */
-{% if is_member %}
-let page = 2;
-let loading = false;
-let hasMore = true;
+/* ENTER SEND */
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+});
 
-window.addEventListener("scroll", () => {
-  if (!hasMore || loading) return;
+/* INFINITE SCROLL */
+let page=2,loading=false,hasMore=true;
 
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-    loading = true;
-    document.getElementById("loading").style.display = "block";
+window.addEventListener("scroll",()=>{
+  if(loading||!hasMore) return;
 
-    fetch(`?page=${page}`, {
-      headers: { "X-Requested-With": "XMLHttpRequest" }
+  if(window.innerHeight+window.scrollY>=document.body.offsetHeight-150){
+    loading=true;
+    document.getElementById("loading").style.display="block";
+
+    fetch(`?page=${page}`,{
+      headers:{"X-Requested-With":"XMLHttpRequest"}
     })
-    .then(res => res.text())
-    .then(html => {
-      if (!html.trim()) {
-        hasMore = false;
-        document.getElementById("loading").innerText = "No more posts";
+    .then(res=>res.text())
+    .then(html=>{
+      if(!html.trim()){
+        hasMore=false;
+        document.getElementById("loading").innerText="No more posts";
         return;
       }
-      document.getElementById("feed").insertAdjacentHTML("beforeend", html);
+      document.getElementById("feed").insertAdjacentHTML("beforeend",html);
       page++;
-      loading = false;
-      document.getElementById("loading").style.display = "none";
+      loading=false;
+      document.getElementById("loading").style.display="none";
     });
   }
 });
-{% endif %}
+
 </script>
 
 {% endblock %}
